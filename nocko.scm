@@ -2,8 +2,8 @@
 ;;  UTC20150411
 ;;  jpt4
 
-(load "~/miniKanren-with-symbolic-constraints/mk.scm")
-(load "~/miniKanren-with-symbolic-constraints/numbers.scm")
+(load "miniKanren-with-symbolic-constraints/mk.scm")
+(load "miniKanren-with-symbolic-constraints/numbers.scm")
 ;;  primitive datatype - atom
 ;;  ex: 6 -> (0 1 1) -> (num (0 1 1))
 (define (atom?o i)
