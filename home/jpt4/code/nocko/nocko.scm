@@ -1,4 +1,4 @@
-;;  nocko, miniKanren relational Nock interpreter
+;;  nocko, miniKanren relational nock interpreter
 ;;  UTC20150411
 ;;  jpt4
 
