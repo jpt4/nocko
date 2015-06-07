@@ -1,5 +1,6 @@
 ;;  UTC20150507 nocko quine jpt4
 #|
+symbolic derivation
 *[a 9 b c]
 *[a1 9 a2 [a3 a4] a5]
 *[*[a1 [a3 a4] a5] /[a2 *[a1 [a3 a4] a5]]]
@@ -31,7 +32,7 @@
     [(num (0)) (num (1 1))]]]]]
 |#
 
-(define nocko-quine 
+(define quine-nko
 '[[[(num (0)) (num (1))]
   [(num (1 0 0 1))
 	 [(num (0 0 1))
