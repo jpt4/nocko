@@ -109,6 +109,7 @@
        (nocko `(* [,a ,d]) res2) (== `[,res1 ,res2] res3) (== res3 o)]
 ;;  redex zero
       [(== `(* [,a [(num (0)) ,b]]) i) (nocko `(/ [,b ,a]) res) (== res o)]
+       ;(== 'diag0 o)]
 ;;  redex one
       [(== `(* [,a [(num (1)) ,b]]) i) 
        (houn?o a) (houn?o b)
@@ -119,6 +120,7 @@
        (nocko `(* [,a ,c]) res2)
        (nocko `(* [,res1 ,res2]) res3) 
        (== res3 o)]
+       ;(== 'diag o)]
 ;;  redex three
       [(== `(* [,a [(num (1 1)) ,b]]) i)
        (nocko `(* [,a ,b]) res1)
@@ -261,174 +263,3 @@
   (fresh (res)
     (mk-lengtho i res)
     (== `(num ,res) o)))
-#|tests
-dec p
-   a=[p 0]
-   b=[5 [4 0 3] 0 2]
-   c=[0 3]
-   d=[1 12] iterate step
-> (run 1 (q) (fresh (k l)
-               (== '(num (0 0 1)) k) operand
-               (== '(num (0 1)) l) counter
-               (nocko 
-                 `(nock [[,k ,l] <- a
-                         (num (0 1 1)) <- central operation
-                         [(num (1 0 1)) 
-                          [(num (0 0 1)) (num (0)) (num (1 1))] 
-                          (num (0)) (num (0 1))] <- b 
-                         [(num (0)) (num (1 1))] <- c
-                         [(num (1)) (num (0 0 1 1))] <- d
-                        ]) 
-                 q)))
-((num (0 0 1 1)))
-redex six sym reduced
-*[a *[[c d] [0 *[[2 3] [0 ++*[a b]]]]]]
-b=[1 0]
-*[a *[[c d] [0 *[[2 3] [0 ++*[a 1 0]]]]]]
-*[a *[[c d] [0 *[[2 3] [0 ++0]]]]]
-*[a *[[c d] [0 *[[2 3] [0 2]]]]]
-*[a *[[c d] [0 2]]]
-*[a c]
-c=[1 3] a=0 d=[1 4]
-3
->(run 1 (q) (nocko '(nock [(num (0)) (num (0 1 1)) [(num (1)) (num (0))] [(num (1)) (num (1 1))] [(num (1)) (num (0 0 1))]]) q))
-((num (1 1)))
-?
->(run 1 (q) (nocko '(nock [(num (0)) (num (1 1)) (num (1)) (num (1 0 1))]) q))
-((num (1)))
-+
->(run 1 (q) 
-      (nocko '(nock [(num (0)) (num (0 0 1)) (num (1)) (num (1 0 1))]) q))
-((num (0 1 1)))
-/
-> (run 1 (q) (nocko '(nock [[(num (0)) (num (0))] (num (0)) (num (1))]) q))
-(((num (0)) (num (0))))
-;;
-application
-> (run 1 (q) (nocko '(nock [[(num (1 1 1)) (num (0)) (num (1))] [(num (0)) (num
-(0 1))] (num (0)) (num (1 1))]) q))
-((num (1 1 1)))
-;;
-redex two
-> (load "n7t.scm")
-> (run 1 (q)
-			 (nocko
-				'(nock
-					[[(num (0)) (num (1)) (num (1 1 1)) (num (0 0 0 1))]
-					 (num (0 1))
-					 [(num (0)) (num (0 1))]
-					 [(num (0)) (num (1 1))]])
-				q))
-(((num (1 1 1)) (num (0 0 0 1))))
-> (load "n7t.scm")
-> (run 1 (q)
-			 (nocko
-				'(nock
-					[[(num (0)) (num (0)) (num (1))]
-					 (num (0 1))
-					 [(num (0)) (num (0 1))]
-					 [(num (0)) (num (1 1))]])
-				q))
-((num (0)))
-redex seven
-> (time (run 1 (q) (nocko '(nock [(num (0)) (num (1 1 1)) [(num (1)) (num (1 1 1
-																																						 ))] (num (0 0 1)) (num (0)) (num (1))]) q)))
-(time (run 1 ...))
-2 collections
-80 ms elapsed cpu time, including 1 ms collecting
-80 ms elapsed real time, including 1 ms collecting
-18697056 bytes allocated, including 16566256 bytes reclaimed
-((num (0 0 0 1)))
-redex eight
-> (time (run 1 (q) (nocko '(nock [(num (0)) (num (0 0 0 1)) [(num (1)) (num (0 0
-																																							 0 1))] (num (0)) (num (0 1))]) q)))
-(time (run 1 ...))
-1 collection
-38 ms elapsed cpu time, including 1 ms collecting
-38 ms elapsed real time, including 1 ms collecting
-8412208 bytes allocated, including 8261776 bytes reclaimed
-((num (0 0 0 1)))
-redex nine
-> (time (run 1 (q) (nocko
-               '(nock [(num (0)) (num (1 0 0 1)) 
-                       (num (1)) (num (1)) (num (0)) (num (1))]) q)))
-(time (run 1 ...))
-    no collections
-    34 ms elapsed cpu time
-    34 ms elapsed real time
-    7292976 bytes allocated
-(((num (0)) (num (1))))
-> (time (run 1 (q) (nocko
-               `(nock [(num (0)) ,q (num (1)) (num (1)) (num (0)) (num (1))]) '[
-(num (0)) (num (1))])))
-(time (run 1 ...))
-    34 collections
-    723 ms elapsed cpu time, including 9 ms collecting
-    724 ms elapsed real time, including 13 ms collecting
-    283127392 bytes allocated, including 285818384 bytes reclaimed
-((num (1 0 0 1)))
-redex ten cell
-> (time (run 1 (q) (nocko '(nock [[(num (1)) (num (0 1 0 1))]
-																	(num (0 1 0 1))
-																	[(num (1 1 0 1)) [(num (1)) (num (0 0 1 1))]]
-																	(num (0)) (num (1))]) q)))
-(time (run 1 ...))
-2 collections
-77 ms elapsed cpu time, including 2 ms collecting
-77 ms elapsed real time, including 2 ms collecting
-18847344 bytes allocated, including 16691888 bytes reclaimed
-(((num (1)) (num (0 1 0 1))))
-redex ten atom
-> (time (run 1 (q) (nocko '(nock [[(num (1)) (num (0 1 0 1))] 
-                                  (num (0 1 0 1)) 
-                                  (num (1 1 0 1)) 
-                                  [(num (1)) (num (0 0 1 1))] 
-                                  (num (0)) (num (1))]) q)))
-(time (run 1 ...))
-2 collections
-65 ms elapsed cpu time, including 2 ms collecting
-65 ms elapsed real time, including 3 ms collecting
-15748848 bytes allocated, including 17071408 bytes reclaimed
-(((num (0 0 1 1)) ((num (1)) (num (0 1 0 1)))))
-;;
-profiling
-(time (run 20 (q) (fresh (r) (== `(nock ,r) q) (nocko q '(num (1))))))
-~10 min runtime
-~205 GiB allocated, all but ~0.5 GiB reclaimed
-#17 (nock ((num (0)) ((num (0 0 1)) ((num (0)) (num (1))))))
-#20 (nock ((num (0)) ((num (0 0 1)) ((num (1)) (num (0))))))
-top reports 100% CPU 5, 8.4/15.638 GiB RAM
-> (time (run 9 (i o) (cell?o i) (nocko `(nock ,i) o)))
-(time (run 9 ...))
-    32358 collections
-    756324 ms elapsed cpu time, including 73471 ms collecting
-    756833 ms elapsed real time, including 73557 ms collecting
-    272592692816 bytes allocated, including 273380861600 bytes reclaimed
-((((num (0)) ((num (0)) (num (1)))) (num (0))) (((num (0)) ((num (1)) (num (0)))) (num (0)))
-  (((num (0)) ((num (1)) (num (1)))) (num (1)))
-  (((num (1)) ((num (0)) (num (1)))) (num (1)))
-  (((num (1)) ((num (1)) (num (0)))) (num (0)))
-  (((num (0)) ((num (1)) (num (0 1)))) (num (0 1)))
-  (((num (0)) ((num (1)) (num (1 1)))) (num (1 1)))
-  (((num (1)) ((num (1)) (num (1)))) (num (1)))
-  (((num (0 1)) ((num (0)) (num (1)))) (num (0 1))))
-
-> (time (run 1 (i) (nocko `(nock ,i) '(num (1)))))
-(time (run 1 ...))
-    188 collections
-    4100 ms elapsed cpu time, including 119 ms collecting
-    4102 ms elapsed real time, including 104 ms collecting
-1583123328 bytes allocated, including 1646787168 bytes reclaimed
-(((num (0)) (num (1)) (num (1))))
-|#
-
-;;  why?
-;;  A:  Order of (houn?o) binding in (oper?o): outside conde loops,
-;;  inside individual clauses fails. See note above.
-;;  Why?
-;;  A:  Understand mk search for answer.
-#|(run 1 (q) (houn?o '[(num (0)) [(num (0)) (num (0))] (num (0))]))
-^Cbreak> q
-
-> (run 1 (q) (noun?o '[(num (0)) [(num (0)) (num (0))] (num (0))]))
-()|#
