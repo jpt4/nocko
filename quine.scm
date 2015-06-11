@@ -32,7 +32,7 @@ symbolic derivation
     [(num (0)) (num (1 1))]]]]]
 |#
 
-(define quine-nko
+(define quine
 '[[[(num (0)) (num (1))]
   [(num (1 0 0 1))
 	 [(num (0 0 1))
