@@ -5,7 +5,7 @@
 
 ;;  nexp is a noun
 (define (nock nexp)
-  (let ([nexpo (preprocess nexp)]
-        [res (car (run 1 (q) (nocko `(* ,nexpo) q)))])
+  (let* ([nexpo (preprocess nexp)]
+         [res (car (run 1 (q) (nocko `(* ,nexpo) q)))])
     (postprocess res)))
         
