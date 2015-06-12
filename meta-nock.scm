@@ -6,5 +6,5 @@
 (define meta-nocko (preprocess meta-nock))
 
 (define meta-nock
-
+'[6 [3 0 1] [1 0] [1 1]])
 

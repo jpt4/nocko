@@ -1,6 +1,4 @@
-;;  process.scm
-;;  jpt4
-;;  UTC20150611
+;;  process.scm  jpt4  UTC20150611
 
 ;;  Convert decimal nock code to reverse binary nocko code.
 (define (preprocess nexp)
@@ -47,5 +45,3 @@
 	  [(null? n) 0]
 	  [(zero? (car n)) (build-dec-aux (cdr n) (add1 e))]
     [else (+ (expt 2 e) (build-dec-aux (cdr n) (add1 e)))]))
-
-

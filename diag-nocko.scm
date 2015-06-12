@@ -1,10 +1,10 @@
-;;  rare-nocko.scm  jpt4  UTC20150612
-;;  nocko, miniKanren relational nock interpreter
-;;  rarefied, load miniKanren dependencies only, no auxiliaries
+;;  diag-nocko.scm  jpt4  UTC20150612
+;;  nocko, miniKanren relational Nock interpreter
+;;  reserved for diagnostics, eventually tracing
 
-;;  load dependencies and auxiliaries
-(load "miniKanren-with-symbolic-constraints/mk.scm")
-(load "miniKanren-with-symbolic-constraints/numbers.scm"
+;;  dependencies
+(load "/home/jpt4/miniKanren-with-symbolic-constraints/mk.scm")
+(load "/home/jpt4/miniKanren-with-symbolic-constraints/numbers.scm")
 
 ;;  primitive datatype - atom
 ;;  ex: 6 -> (0 1 1) -> (num (0 1 1))
@@ -111,6 +111,7 @@
        (nocko `(* [,a ,d]) res2) (== `[,res1 ,res2] res3) (== res3 o)]
 ;;  redex zero
       [(== `(* [,a [(num (0)) ,b]]) i) (nocko `(/ [,b ,a]) res) (== res o)]
+       ;(== 'diag0 o)]
 ;;  redex one
       [(== `(* [,a [(num (1)) ,b]]) i) 
        (houn?o a) (houn?o b)
@@ -121,6 +122,7 @@
        (nocko `(* [,a ,c]) res2)
        (nocko `(* [,res1 ,res2]) res3) 
        (== res3 o)]
+       ;(== 'diag o)]
 ;;  redex three
       [(== `(* [,a [(num (1 1)) ,b]]) i)
        (nocko `(* [,a ,b]) res1)
