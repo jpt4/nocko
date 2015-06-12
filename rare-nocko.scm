@@ -1,8 +1,10 @@
-;;  nocko.scm  jpt4  UTC20150411
+;;  rare-nocko.scm  jpt4  UTC20150612
 ;;  nocko, miniKanren relational nock interpreter
+;;  rarefied, load miniKanren dependencies only, no auxiliaries
 
 ;;  load dependencies and auxiliaries
-(load "prelude.scm")
+(load "miniKanren-with-symbolic-constraints/mk.scm")
+(load "miniKanren-with-symbolic-constraints/numbers.scm"
 
 ;;  primitive datatype - atom
 ;;  ex: 6 -> (0 1 1) -> (num (0 1 1))

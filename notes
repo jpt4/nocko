@@ -1,3 +1,12 @@
+#|
+UTC20150612
+As languages, Scheme, LISP, etc. don't have (scheme) or (lisp) 
+functions, a semantic role instead occupied by (eval), 
+(interp), and similar. Nock, however, is a function, and thus
+defines its name in its spec as the entry point to
+evaluation.
+|#
+
 #|tests
 dec p
    a=[p 0]
