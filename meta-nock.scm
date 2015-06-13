@@ -3,8 +3,12 @@
 ;;  nock, interpreted by (nocko)
 
 ;;  TODO: IMPLEMENT MINIKANREN DECIMAL NUMERALS
-(define meta-nocko (preprocess meta-nock))
+
+
+(define rasf '[1 1])
+(define rast `[1 0])
 
 (define meta-nock
-'[6 [3 0 1] [1 0] [1 1]])
+`[6 [3 0 2] ,rast ,rasf])
 
+(define meta-nocko (preprocess meta-nock))
