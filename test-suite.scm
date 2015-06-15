@@ -68,16 +68,20 @@
 
   '(_.0))
 
-(test "recognize operations"
-  (run* (q) (oper?o [(== `(* ,a) i) (houn?o a)]
-      [(== `(? ,a) i) (houn?o a)]
-      [(== `(+ ,a) i) (houn?o a)]
-      [(== `(= ,a) i) (houn?o a)]
-      [(== `(/ ,a) i) (houn?o a)]
-)
-(test "recognize hells"
+#;(test "recognize operations"
+  (run* (q) (fresh (a i) (oper?o [(== `(* ,a) i) (houn?o a)])))
+  '(_.0))
+;      [(== `(? ,a) i) (houn?o a)]
+;      [(== `(+ ,a) i) (houn?o a)]
+;      [(== `(= ,a) i) (houn?o a)]
+;      [(== `(/ ,a) i) (houn?o a)]
+
+#;(test "recognize hells"
   (run* (q) (hell?o '[(num (0)) (num (0))])
-            (hell?o '[(*
+            (hell?o '[(* [(num (0)) (num (0))]) (num (0))]))
+  '(_.0))
+
+#|
 "houns"
 
 "don't recognize broken"
@@ -85,7 +89,7 @@
 "noun"
 "hell"
 "houn"
-
+|#
 
 #|
 (define (multi-test ver arg)
