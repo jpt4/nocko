@@ -53,11 +53,11 @@
       [(== `(/ ,a) i) (houn?o a)]
 )))
 ;;  hybrid cell - hell
-(define (hell?o i)
+#|(define (hell?o i)
   (fresh (a d)
     (== `(,a ,d) i)
     (houn?o a) (houn?o d)
-))
+))|#
 ;;  hybrid noun - houn
 (define (houn?o i)
   (conde
