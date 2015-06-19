@@ -45,4 +45,4 @@ symbolic derivation
     [(num (0)) (num (1 1))]]]]])
 
 ;;  nock decimal encoding
-(define quine (postprocess quineo))
+(define quine (rbin-to-dec quineo))

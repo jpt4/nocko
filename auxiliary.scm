@@ -3,9 +3,9 @@
 
 ;;  auxiliaries
 (load "clever-meta-nocko.scm")
+(load "convert.scm")
 (load "dec.scm")
 (load "meta-nock.scm")
 (load "nock.scm")
-(load "process.scm")
 (load "quine.scm")
 
