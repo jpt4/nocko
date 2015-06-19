@@ -1,4 +1,4 @@
-;;  convert.scm  jpt4  UTC20150611
+;;  num-convert.scm  jpt4  UTC20150611
 
 ;;  Convert decimal nock code to reverse binary nocko code.
 (define (dec-to-rbin nexp)
