@@ -38,29 +38,7 @@
     [(atom?o i)]
     [(cell?o i)]
 ))
-;;  internal datatype - operation
-#;(define (oper?o i)
-  (fresh (a)  
-    (conde
-      [(== `(* ,a) i) (houn?o a)]
-      [(== `(? ,a) i) (houn?o a)]
-      [(== `(+ ,a) i) (houn?o a)]
-      [(== `(= ,a) i) (houn?o a)]
-      [(== `(/ ,a) i) (houn?o a)]
-)))
-;;  hybrid cell - hell
-#;(define (hell?o i)
-  (fresh (a d)
-    (== `(,a ,d) i)
-    (houn?o a) (houn?o d)
-))
-;;  hybrid noun - houn
-#;(define (houn?o i)
-  (conde
-    [(atom?o i)]
-    [(hell?o i)]
-    [(oper?o i)]
-))    
+
 ;;  wut redexes
 (define (wuto i o)
   (conde
