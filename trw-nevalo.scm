@@ -1,9 +1,5 @@
-;;  nocko.scm  jpt4  UTC20150411
-;;  nocko, miniKanren relational nock interpreter
-
-;;  dependencies
-(load "miniKanren-with-symbolic-constraints/mk.scm")
-(load "miniKanren-with-symbolic-constraints/numbers.scm")
+;;  trw-nevalo.scm  jpt4  UTC20150411
+;;  term re-writing evaluator of nock code for (nocko)
 
 ;;  primitive datatype - atom
 ;;  ex: 6 -> (0 1 1) -> (num (0 1 1))
@@ -223,7 +219,7 @@
   (conde
     [(=/= 'num i) (=/= '* i) (=/= '? i) (=/= '+ i) (=/= '= i) (=/= '/ i)]
 ))
-;;  trw-nevalo specific arithmetic, produces only numeric output
+;;  nocko specific arithmetic, produces only numeric output
 (define (+o p q r)
   (fresh (a b c)
     (== `(num ,a) p) (== `(num ,b) q) (== `(num ,c) r)
@@ -233,7 +229,7 @@
     [(== '(0) b) (== p r)]
     [(=/= '(0) a) (=/= '(0) b) (pluso a b c)]
 )))
-;;  trw-nevalo (add1)
+;;  nocko (add1)
 (define (+1o i o)
   (+o i '(num (1)) o))
 ;;  comparators
@@ -257,7 +253,7 @@
     [(== '() i) (== '() o)]
     [(fresh (a d res)
        (== `(,a . ,d) i) (mk-lengtho d res) (pluso '(1) res o))]))
-;;  trw-nevalo specific length
+;;  nocko specific length
 (define (lengtho i o)
   (fresh (res)
     (mk-lengtho i res)

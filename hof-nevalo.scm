@@ -78,17 +78,6 @@
 ;;  degenerate address expression
       [(atom?o i) (== `[/ ,i] o)]
 )))
-;;  (nevalo) interprets a quoted nock expression.
-;;  prefix operators scope selves and operands with pel/per.
-;;  sel/ser delineates cell boundaries only.
-(define (nevalo i o)
-  (fresh (a ra)
-    (conde
-;;  nock(a) -> (nock a) -> `(nock ,a) -> (run* (q) (nocko `(nock ,a) q))
-      [(== `(nock ,a) i) (raso a ra) (taro ra o)]
-;;  ras redex - ideally redundant, that which is raso'd on entry should stay so
-      [(not-ras?o i) (raso i ra) (taro ra o)]
-)))
 ;;  tar redexes
 (define (taro i o)
   (fresh (a b c d res1 res2 res3 res4 res5)
@@ -152,6 +141,16 @@
 ;;  (nocko `(* (num ...)) q) -> (* (num ...))
       [(atom?o i) (== `(* ,i) o)]
 )))
+;;  (nevalo) interprets a quoted nock expression.
+;;  sel/ser delineates cell boundaries only.
+(define (hof-nevalo i o)
+  (fresh (a ra)
+    (conde
+;;  nock(a) -> (nock a) -> `(nock ,a) -> (run* (q) (hof-nevalo `(nock ,a) q))
+      [(== `(nock ,a) i) (raso a ra) (taro ra o)]
+;;  ras redex - ideally redundant, that which is raso'd on entry should stay so
+      [(not-ras?o i) (raso i ra) (taro ra o)]
+)))
 ;;  define right associativity
 ;;  converts non-ra tuples (potentially deep) into ra
 ;;  recurses until fundamental datatype found - these assumed ra
@@ -181,8 +180,6 @@
     [(fresh (a b resa resb rest)
        (== `[,a ,b] i) (raso a resa) (raso b resb) (== `[,resa ,resb] rest)
        (== rest o))]
-;;  clean operation
-;    [(oper?o i) (== i o)]
 ;;  clean cell
     [(cell?o i) (== i o)]
 ;;  bare atom
