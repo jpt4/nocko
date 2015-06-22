@@ -143,10 +143,10 @@
 )))
 ;;  (nevalo) interprets a quoted nock expression.
 ;;  sel/ser delineates cell boundaries only.
-(define (hof-nevalo i o)
+(define (nevalo i o)
   (fresh (a ra)
     (conde
-;;  nock(a) -> (nock a) -> `(nock ,a) -> (run* (q) (hof-nevalo `(nock ,a) q))
+;;  nock(a) -> (nock a) -> `(nock ,a) -> (run* (q) (nevalo `(nock ,a) q))
       [(== `(nock ,a) i) (raso a ra) (taro ra o)]
 ;;  ras redex - ideally redundant, that which is raso'd on entry should stay so
       [(not-ras?o i) (raso i ra) (taro ra o)]

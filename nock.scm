@@ -1,7 +1,5 @@
-;;  nock.scm
+;;  nock.scm  jpt4  UTC20150612
 ;;  non-relational use of (nevalo), wraps miniKanren (run) interface
-;;  jpt4
-;;  UTC20150612
 
 ;;  nexp is a noun
 (define (nock nexp)
