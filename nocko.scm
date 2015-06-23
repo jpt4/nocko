@@ -26,27 +26,30 @@
 ;;  set-up nocko execution environment, with specializations
 (define (nconfig op)
   (case op
-    ['all  (maximalist)]            ;;  hof-nevalo.scm + everything
-    ['aux  (utilities) (examples)]  ;;  extras only
-    ['hof  (higher-of-nevalo)]      ;;  (nevalo) using hof-nevalo.scm
-    ['min  (core)]                  ;;  hof-nevalo.scm + mk dependencies
-    ['trw  (term-rw-nevalo)]        ;;  (nevalo) using trw-nevalo.scm
-    [else  (maximalist)]))          ;;  default to 'all
+    ['all  (maximalist)]                    ;;  hof-nevalo.scm + everything
+    ['aux  (begin (utilities) (examples))]  ;;  extras only
+    ['hof  (higher-of-nevalo)]              ;;  (nevalo) using hof-nevalo.scm
+    ['min  (core)]                          ;;  hof-nevalo.scm + mk dependencies
+    ['trw  (term-rw-nevalo)]                ;;  (nevalo) using trw-nevalo.scm
+    [else  (maximalist)]))                  ;;  default to 'all
     
 (define (maximalist)
-  (core)
-  (utilities)
-  (examples))
+  (begin
+	  (core)
+    (utilities)
+    (examples)))
 
 (define (core)
-  (load "miniKanren-with-symbolic-constraints/mk.scm")
-  (load "miniKanren-with-symbolic-constraints/numbers.scm")
-  (load "hof-nevalo.scm"))
+  (begin
+    (load "miniKanren-with-symbolic-constraints/mk.scm")
+    (load "miniKanren-with-symbolic-constraints/numbers.scm")
+    (load "hof-nevalo.scm")))
 
 (define (examples)
-  (load "clever-meta-nocko.scm")
-  (load "dec.scm")
-  (load "quine.scm"))
+  (begin
+    (load "clever-meta-nocko.scm")
+    (load "dec.scm")
+    (load "quine.scm")))
 
 (define (higher-of-nevalo)
   (load "hof-nevalo.scm"))
@@ -55,5 +58,6 @@
   (load "trw-nevalo.scm"))
 
 (define (utilities)
-  (load "convert.scm")
-  (load "nock.scm"))
+  (begin
+    (load "convert.scm")
+    (load "nock.scm")))
