@@ -5,10 +5,11 @@
 (define (nconfig op)
   (case op
     ['all  (maximalist)]                    ;;  hof-nevalo.scm, everything
-    ['aux  (begin (utilities) (examples))]  ;;  extras only
+    ['aux  (utilities)]                     ;;  nocko auxiliary programs
     ['hof  (higher-of-nevalo)]              ;;  (nevalo) using hof-nevalo.scm
     ['min  (core)]                          ;;  hof-nevalo.scm, mk dependencies
     ['trw  (term-rw-nevalo)]                ;;  (nevalo) using trw-nevalo.scm
+    ['zum  (examples)]                      ;;  example nocko programs
     [else  (maximalist)]))                  ;;  default to 'all
     
 (define (maximalist)
@@ -39,4 +40,5 @@
 (define (utilities)
   (begin
     (load "convert.scm")
-    (load "nock.scm")))
+    (load "nock.scm")
+    (load "test-suite.scm")))
