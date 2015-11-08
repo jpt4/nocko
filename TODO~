@@ -7,3 +7,5 @@ meta-circular evaluator
 finish (test-suite)
 
 mk decimal numerals
+
+run detected but not bound - why?
