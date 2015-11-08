@@ -3,7 +3,6 @@
 
 ;;  nexp is a noun
 (define (nock nexp)
-  (let* ([nexpo (dec-to-rbin nexp)]
-         [res (car (run 1 (q) (nevalo `(* ,nexpo) q)))])
+  (let* ([nexpo (car (run 1 (q) (raso (dec-to-rbin nexp) q)))]
+         [res (car (run 1 (q) (nevalo `(nock ,nexpo) q)))])
     (rbin-to-dec res)))
-        

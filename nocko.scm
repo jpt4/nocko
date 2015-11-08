@@ -22,6 +22,7 @@
   (begin
     (load "miniKanren-with-symbolic-constraints/mk.scm")
     (load "miniKanren-with-symbolic-constraints/numbers.scm")
+		(load "portability.scm")
     (load "hof-nevalo.scm")
 		(load "nevalo-wrapper.scm")))
 

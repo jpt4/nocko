@@ -7,5 +7,6 @@
 (load "dec.scm")
 (load "meta-nock.scm")
 (load "nock.scm")
+(load "portability.scm")
 (load "quine.scm")
 
