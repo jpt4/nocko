@@ -24,8 +24,8 @@
 	   (== `(num . (,d)) i)
 	   (num?o d))]))
 
-;;  mk reverse binary numbers, except explicitly numerical
-;;  and with exposed zero '(0).
+;;  mk reverse binary numbers, except explicitly numerical and with
+;;  exposed zero '(0).
 (define (num?o i)
   (conde
    [(== '(0) i)]
@@ -97,13 +97,15 @@
           [(== `[(num (1)) [,a ,b]] i) (== a o)]
           [(== `[,adr [,b ,c]] i) (gtheo a '(num (1))) (+o a a adr)
            (+1o adr res1) (faso `[,res1 ,c] res2) 
-           (haxo `[,a [[,b ,res2] ,c]] res3)]
+           (haxo `[,a [[,b ,res2] ,c]] res3) (== res3 o)]
           [(== `[,adr [,b ,c]] i) (gtheo a '(num (1))) (+o a a res1)
            (+1o res1 adr) (+o a a res2) (faso `[,res2 ,c] res3) 
-           (haxo `[,a [[,res2 ,b] ,c]] res4)]
-          ;;  degenerate case - TODO: match other than atom
+           (haxo `[,a [[,res2 ,b] ,c]] res4) (== res4 o)]
+          ;;  degenerate hax expression
           ;;  |#| because # alone is a reserved symbol in Racket
           [(atom?o i) (== `(|#| ,i) o)]
+          [(== `[,a ,b] i) (cell?o a) (== `(|#| ,i) o)]
+          [(== `[,a ,b] i) (== '(num (0)) a) (== `(|#| ,i) o)]
           )))
 ;;  tar redexes
 (define (taro i o)
@@ -150,34 +152,76 @@
 	  ;;  redex eight  *[a 8 b c]=>*[a 7 [[7 [0 1] b] 0 1] c]=>*[[*[a b] a] c]
 	  [(== `[,a [(num (0 0 0 1)) [,b ,c]]] i)
 	   (taro `[,a ,b] res1) (taro `[[,res1 ,a] ,c] o)]
-	  ;;  redex nine  *[a 9 b c]=>*[a 7 c 2 [0 1] 0 b]=>*[*[a c] /[b *[a c]]]
-	  [(== `[,a [(num (1 0 0 1)) [,b ,c]]] i)
+	  ;;  redex nine  *[a 9 b c]=>*[*[a c] 2 [0 1] 0 b]
+          ;;                        =>*[*[*[*[a c] [0 1]] *[*[a c] [0 b]]]]
+          ;;                        =>*[*[/[1 *[a c]] /[b *[a c]]]]
+          ;;                        =>*[*[*[a c] /[b *[a c]]]]
+          [(== `[,a [(num (1 0 0 1)) [,b ,c]]] i)
+           (taro `[,a ,c] res1)
+           (taro `[,res1 [2 [[0 1] [0 ,b]]]] o)]
+	  #;[(== `[,a [(num (1 0 0 1)) [,b ,c]]] i)
 	   (taro `[,a ,c] res1) 
 	   (faso `[,b ,res1] res2)
 	   (taro `[,res1 ,res2] o)]
-	  ;;  redex ten cell  *[a 10 [b c] d]=>*[a 8 c 7 [0 3] d]=>*[/[3 [*[a c] a]] d]
-	  ;;  in which nock reveals its strict evaluation TODO: (non-loop?o) predicate
-	  [(== `[,a [(num (0 1 0 1)) [[,b ,c] ,d]]] i)
-	   (cell?o `[,b ,c])       
-	   (taro `[,a ,c] res1) (faso `[(num (1 1)) [,res1 ,a]] res2)
-	   (taro `[,res2 ,d] o)]
-	  ;;  redex ten atom *[a 10 b c]=>*[a c]
-	  [(== `[,a [(num (0 1 0 1)) [,b ,c]]] i)
+          ;;  redex 10  *[a 10 [b c] d]=>#[b *[a c] *[a d]]
+          [(== `[,a [(num (0 1 0 1)) [[,b ,c] ,d]]] i)
+           (taro `[,a ,c] res1) (taro `[,a ,d] res2)
+           (haxo `[,b [,res1 ,res2]] o)]          
+	  ;;  redex eleven cell  *[a 11 [b c] d]=>*[[*[a c] *[a d]] 0 3]
+          ;;                                =>/[3 [*[a c] *[a d]]]
+          ;;                                =>*[a d]
+          ;;  In which the evaluation strategy of nock becomes
+          ;;  relevant: by a plain language interpretation of "Reduce
+          ;;  by the first matching pattern", outer reduction should
+          ;;  select *[a d] within /[3 ...] without previously
+          ;;  matching to the evaluation of *[a c]. This is comparable
+          ;;  to a lazy evaluation strategy. An interpreter supporting
+          ;;  an inner reduction strategy, comparable to
+          ;;  strict/applicative order strategy, will evaluate *[a c]
+          ;;  and *[a d] prior to the outer fas reduction. If a spec
+          ;;  compliant nock implementation _must_ evaluate *[a c],
+          ;;  e.g. to allow for the production of side-effectful
+          ;;  signals processed by the runtime, then the natural
+          ;;  language reduction order instructions must be elaborated
+          ;;  upon.
+            ;;  outer reduction
+          [(== `[,a [(num (0 1 0 1)) [[,b ,c] ,d]]] i)
+	   (cell?o `[,b ,c]) 
+           (taro `[,a ,d] o)]
+            ;;  inner reduction
+          #;[(== `[,a [(num (1 1 0 1)) [[,b ,c] ,d]]] i)
+           (cell?o `[,b ,c])       
+           (taro `[,a ,c] res1) (taro `[,a ,d] res2) 
+           (faso `[(num (1 1)) [,res1 ,res2]] o)]
+	  ;;  redex eleven atom *[a 11 b c]=>*[a c]
+	  [(== `[,a [(num (1 1 0 1)) [,b ,c]]] i)
 	   (atom?o b)
 	   (taro `[,a ,c] o)]
-	  ;;  (nocko `(* (num ...)) q) -> (* (num ...))
-	  [(atom?o i) (== `(* ,i) o)]
+          ;;  degenerate tar expression
+            ;;  a = atom
+            ;;  (nocko `(* (num ...)) q) -> (* (num ...))
+          [(atom?o i) (== `(* ,i) o)]
+            ;;  a = cell, second noun an atom
+          [(== `[,a ,b] i) (atom?o b) (== `(* ,i) o)]
+            ;;  a = cell, second noun a cell, first noun thereof an atom > 11
+          [(== `[,a ,b] i) (cell?o b) (== `[,c ,d] b)
+           (atom?o c) (gtheo c '(num (0 0 1 1))) (== `(* ,i) o)]
+            ;;  a = cell, second noun a cell, first noun thereof a cell
+          [(== `[,a ,b] i) (cell?o b) (== `[,c ,d] b) (cell?o c) (== `(* ,i) o)]
 	  )))
 ;;  (nevalo) interprets a quoted nock expression.
 ;;  sel/ser delineates cell boundaries only.
 (define (nevalo i o)
   (fresh (a ra)
 	 (conde
-	  ;;  nock(a) -> (nock a) -> `(nock ,a) -> (run* (q) (nevalo `(nock ,a) q))
+	  ;;  nock(a) -> (nock a) -> `(nock ,a) -> 
+          ;;  (run* (q) (nevalo `(nock ,a) q))
 	  [(== `(nock ,a) i) (raso a ra) (taro ra o)]
-	  ;;  ras redex - ideally redundant, that which is raso'd on entry should stay so
+	  ;;  ras redex - ideally redundant, that which is raso'd on
+	  ;;  entry should stay so
 	  [(not-ras?o i) (raso i ra) (taro ra o)]
 	  )))
+;;  TODO: Revise for non-term rewriting evaluation
 ;;  define right associativity
 ;;  converts non-ra tuples (potentially deep) into ra
 ;;  recurses until fundamental datatype found - these assumed ra
@@ -222,6 +266,7 @@
   (fresh (a)
 	 (raso i a) (=/= i a)
 	 ))
+;;  TODO: correlate with (raso) TODO
 ;;  test if not data tag
 (define (not-tag?o i)
   (conde
