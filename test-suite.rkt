@@ -2,7 +2,7 @@
 ;;  20220811Z
 ;;  jpt4 
 ;;  nocko test suite
-;;  Racket v8.5
+;;  Racket v8.6
 ;;  (test) syntax from 
 ;;  github.com/webyrd/miniKanren-with-symbolic-constraints/test-check.scm
 

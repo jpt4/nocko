@@ -2,7 +2,7 @@
 ;;  20220718Z
 ;;  jpt4
 ;;  Nock 4K in miniKanren
-;;  Racket v8.5
+;;  Racket v8.5+
 
 #lang racket
 

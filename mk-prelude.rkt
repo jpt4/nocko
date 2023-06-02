@@ -2,7 +2,7 @@
 ;; 20220711Z
 ;; jpt4
 ;; miniKanren auxiliary definitions
-;; Racket v8.5
+;; Racket v8.5+
 
 (module mk-prelude racket
   (require minikanren)

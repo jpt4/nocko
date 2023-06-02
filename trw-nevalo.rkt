@@ -2,6 +2,7 @@
 ;;  20220804Z
 ;;  jpt4
 ;;  term re-writing evaluator of Nock 4K code for (nocko)
+;;  Racket v8.6
 
 #lang racket
 
