@@ -73,13 +73,25 @@
 
 (define (rembero x l out)
   (conde
-   ((nullo l) (nullo out))
-   ((caro l x) (cdro l out))
-   ((fresh (a d res)
-	   (conso a d l)
-	   (=/= a x)
-	   (conso a res out)
-	   (rembero x d res)))))
+   [(nullo l) (nullo out)]
+   [(fresh (a d res)
+           (conso a d l)
+           (rembero x d res)
+           (conde
+            [(=/= a x) (conso a res out)]
+            [(== a x) (== res out)]))]))
+
+;; x is a subset of s
+(define (subseto x s)
+  (distincto x) (distincto s)
+  (conde
+   [(nullo x)]
+   [(fresh (a d res)
+           (caro x a) (cdro x d)
+           (rembero a s res)
+           (conde
+            [(== s res) fail]
+            [(=/= s res) (subseto d res)]))]))
 
 (define (appendo l s out)
   (conde
@@ -142,6 +154,33 @@
 
 ;; A relation which guarantees no element of s will unify with another element
 ;; of s.
+;; TODO: Determine whether the following violates intended semantics:
+;; racket@nocko> (run 1 (q) (distincto '(() 1)))
+;; '()
+;; racket@nocko> (run 1 (q) (== '() 1))
+;; '()
+;; racket@nocko> (run 1 (q) (=/= '() 1))
+;; '(_.0)
+;; racket@nocko> (run 1 (q) (distincto '(1 ())))
+;; '()
+;; racket@nocko> (run 1 (q) (distincto '(1 '())))
+;; '(_.0)
+;; racket@nocko> (run 1 (q) (distincto '(1)))
+;; '(_.0)
+;; racket@nocko> '(1 ())
+;; '(1 ())
+;; racket@nocko> '(1 '())
+;; '(1 '())
+;; racket@nocko> (cdr '(1 ()))
+;; '(())
+;; racket@nocko> (cdr '(1 '()))
+;; '('())
+;; racket@nocko> (run 1 (q) (distincto '('() 1)))
+;; '(_.0)
+;; racket@nocko> (run 1 (q) (distincto '('() ())))
+;; '()
+;; racket@nocko> (run 1 (q) (distincto '('() '())))
+;; '()
 (define (distincto s)
   (conde
    ((nullo s))
@@ -160,6 +199,10 @@
 ;;
 ;; Adapted from the definition in Clojure's core.logic, LICENSE can be found at:
 ;; https://github.com/clojure/core.logic/blob/master/LICENSE
+;; TODO: Fix, cf:
+;; racket@nocko> (run 1 (q) (permuteo '(1 2 3) '(3 2 1 1)))
+;; '(_.0)
+
 (define (permuteo xl yl)
   (conde
    ((nullo xl)

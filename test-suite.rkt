@@ -19,7 +19,7 @@
 
 ;;  By default, recognition of valid nocko expressions is tested.
 ;;  Expression generation may differ across miniKanren implementations.
-(define (test-suite op)
+#;(define (test-suite op)
   (case op
     [all (begin (test-recognize) (test-generate))]
     [rec (test-recognize)]

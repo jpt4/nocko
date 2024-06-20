@@ -1,0 +1,5 @@
+20230806Z
+
+Q: (require minikanren/numbers) fails
+
+A: `raco pkg install faster-minikanren`, not `raco pkg install minikanren`

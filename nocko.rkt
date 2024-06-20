@@ -12,7 +12,7 @@
 (require "convert.rkt") 
 
 ;;  general datatype - noun
-(define (noun?o i)
+n(define (noun?o i)
   (conde
    [(atom?o i)]
    [(cell?o i)]))
@@ -228,8 +228,10 @@
           ;;  e.g. to allow for the production of side-effectful
           ;;  signals processed by the runtime, then the natural
           ;;  language reduction order instructions must be elaborated
-          ;;  upon.
-            ;;  outer reduction
+          ;;  upon. [20240620Z Edit: For elaboration, see Nock 11
+          ;;  here:
+          ;;  https://docs.urbit.org/language/nock/reference/specification]
+          ;;  outer reduction
           [(== `[,a [(num (0 1 0 1)) [[,b ,c] ,d]]] i)
 	   (cell?o `[,b ,c]) 
            (taro `[,a ,d] o)]
@@ -360,7 +362,7 @@
 	  ))
   (fresh (a b c)
 	 (== `(num ,a) p) (== `(num ,b) q) (== `(num ,c) r)
-	 ;(num?o a) (num?o b) (num?o c)
+	 (num?o a) (num?o b) (num?o c)
 	 (conde
           ;[(== '(0) a) (== '(0) b) (== '(0) c)]
 	  [(== '(0) a) (== q r)]
